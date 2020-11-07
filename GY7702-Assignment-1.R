@@ -183,27 +183,107 @@ powys_complete_covid_data <- covid_data %>%
    dplyr::filter(!is.na(newCasesBySpecimenDate)) %>%
    dplyr::filter(area_name == "Powys") %>%
    dplyr::select(-area_name) %>%
-   knitr::kable() %>% 
-   print()
+   tibble::as.tibble() 
+
+   
+powys_complete_covid_data %>%
+   knitr::kable()
  
  
+ ## note: Replace the remaining NA values (those that don’t have a previous value available) with zero
 
 # # Question 3.3 ----------------------------------------------------------
 
- powys_day_before <- powys_complete_covid_data
+ 
+ 
+ library(lubridate)
+ 
+ powys_day_before <- powys_complete_covid_data %>%
+   dplyr::mutate(day_before = ymd(specimen_date) - 1) %>%
+   dplyr::select(-specimen_date, -cumCasesBySpecimenDate) %>%
+   dplyr::rename("newCases_day_before" = "newCasesBySpecimenDate") %>%
+   tibble::as.tibble()
  
  powys_day_before %>%
-lubridate::as_date(day_before = specimen_data) %>%
- knitr::kable()
- 
- select(-specimen_data, -cumCasesBySpecimenDate) %>%
- knitr::kable()
+   knitr::kable()
  
  
+ # full join verb
+ powys_covid_development <- 
+   dplyr::inner_join(
+   # left table
+   powys_complete_covid_data,
+   # right table
+   powys_day_before,
+   # columns to match
+   by = c( "specimen_date" ="day_before")
+ ) %>%
+   # reorder columns for easier reading, drop the -cumCasesBySpecimenDate colum.
+   dplyr::select(specimen_date, newCases_day_before, newCasesBySpecimenDate, -cumCasesBySpecimenDate) %>%
+   dplyr::mutate(
+     percentage = (newCasesBySpecimenDate/ newCases_day_before)*100
+     ) %>%
+   tibble::as.tibble()
 
+ powys_covid_development %>%
+   knitr::kable(digits = 2)
+  
+## tibbles or kables?
+   
+   
 # Question 3.4  -----------------------------------------------------------
 
-#  Write a short text (max 150 words) describing the development of new cases in the area
- # over time, as evidenced by the table [area]_covid_development.
+
+# The number of new cases starts to rise in the second week of March but quickly lowers back to 0
+  # after 4 days. 
+# An increase can be observed later in March, this time with sustained percentage changes
+  # often between 100 - 200%. 
+# The lower figures that interrupt this sustained change tend to be weekend recordings.
+# The number of new cases continues at a high rate into May, 
+# reaching a percentage change high of 800% on May 10th. 
+# From here, the number of new cases declines. 
+# In June, July, and the first week of August there are very few new cases, 
+  # although there is a notable spike of 10 new cases on July 20th. 
+# New cases begin to climb again from the 2nd half of August, 
+  # with percentage change often equalling between 100 - 300%.
+# The figures remain similar to this through to October 9th, where this data ends.   
  
+ 
+
+#  Question 4 -------------------------------------------------------------
+
+ 
+ 
+lad19 <- readr::read_csv("lad19_population.csv") 
+ 
+ 
+ lad19_covid19 <- 
+   dplyr::full_join(
+     lad19,
+     covid_data,
+     by = c("lad19_area_name" = "area_name")
+     ) %>%
+   dplyr::filter(lad19_area_name == "Powys") %>%
+   dplyr::select(specimen_date, area_population, newCasesBySpecimenDate, cumCasesBySpecimenDate, 
+                 -lad19_area_name, -lad19_area_code) %>%
+   dplyr::mutate((cumCasesBySpecimenDate/area_population)*100) %>%
+   tibble::as_tibble()
+   
+ lad19_covid19 %>%
+   knitr::kable (digits = 2) 
+
+ # Breakdown into week summaries
+ # Compare with other areas with similar population sizes
+ # Can I introduce new data?
+ # print width?
+ # small population table?
+ # possibly use pivot?
+ # include densities and area?
+ # wales lockdown?
+ # isoweek?
+ 
+   
+
+ 
+ # Include a short text (max 250 words) providing a short description of the analysis and interpretation of the results.
  

@@ -135,7 +135,7 @@ logical_survey_answers <- cleaned_survey_answers >= 5
    
 
 # Works, but is ugly 
- minmedmaxbillnewpenguins <- palmerpenguins::penguins %>%
+ minmedmaxbillnewpenguins2 <- palmerpenguins::penguins %>%
    dplyr::select(species, island, bill_length_mm, bill_depth_mm) %>%
    dplyr::filter(!is.na(bill_length_mm)) %>%
    dplyr::group_by(species) %>%
@@ -252,9 +252,15 @@ powys_complete_covid_data %>%
 
 #  Question 4 -------------------------------------------------------------
 
- 
+# Load
  
 lad19 <- readr::read_csv("lad19_population.csv") 
+ 
+ 
+
+# Join
+
+ lad19 <- readr::read_csv("lad19_population.csv") 
  
  
  lad19_covid19 <- 
@@ -262,16 +268,77 @@ lad19 <- readr::read_csv("lad19_population.csv")
      lad19,
      covid_data,
      by = c("lad19_area_name" = "area_name")
-     ) %>%
-   dplyr::filter(lad19_area_name == "Powys") %>%
-   dplyr::select(specimen_date, area_population, newCasesBySpecimenDate, cumCasesBySpecimenDate, 
-                 -lad19_area_name, -lad19_area_code) %>%
-   dplyr::mutate((cumCasesBySpecimenDate/area_population)*100) %>%
-   tibble::as_tibble()
+   ) 
+ 
+ 
+ 
+ # 7 Day Average Analysis
+ 
+wide_covid <- lad19_covid19 %>%
+  select(-cumCasesBySpecimenDate, -area_population, -lad19_area_code) %>%
+   dplyr::mutate(
+     lad19_area_name = str_replace_all(lad19_area_name, " ", "_")
+   ) %>%
+  filter(lad19_area_name == "Powys"|lad19_area_name == "Wychavon"| lad19_area_name == "Broadland"| 
+           lad19_area_name == "Exeter" | lad19_area_name == "Epping_Forest") %>%
+  pivot_wider(
+  names_from = lad19_area_name,
+  values_from = newCasesBySpecimenDate
+  ) %>%
+   dplyr::filter(
+     !is.na(Broadland),
+     !is.na(Powys),
+     !is.na(Wychavon),
+     !is.na(Exeter),
+     !is.na(Epping_Forest)
+     )%>%
+   mutate(
+     week_commencing = floor_date(specimen_date, unit = "weeks", week_start = getOption("lubridate.week.start", 1))
+   ) %>%
+   group_by(week_commencing) %>%
    
- lad19_covid19 %>%
-   knitr::kable (digits = 2) 
+   # 7 Day Average of New Cases
+   
+   summarise(Powys = mean(Powys), Broadland = mean(Broadland), Wychavon = mean(Wychavon),
+             Exeter = mean(Exeter), Epping_Forest = mean(Epping_Forest)) %>%
+  tibble::as.tibble()
+ 
 
+
+wide_covid %>%
+  knitr::kable(digits = 2)
+
+
+# Table will illustrate a comparison between Powys and 4 other regions that have similar populations.
+# To understand the general trends and mitigate the weekend effect a 7 day average of new cases has been 
+# calculated for each week. Broadland spike. Epping Forest spike.
+# High finish. 
+
+
+
+# Notes
+
+lad19_covid19 <- 
+  dplyr::full_join(
+    lad19,
+    covid_data,
+    by = c("lad19_area_name" = "area_name")
+  ) %>%
+  dplyr::filter(lad19_area_name == "Powys"| lad19_area_name == "Angus")  %>%
+  dplyr::select(specimen_date, -area_population, newCasesBySpecimenDate, -cumCasesBySpecimenDate, 
+                lad19_area_name, -lad19_area_code) %>%
+  group_by(week_number = format(specimen_date, "%W")) %>%
+  summarise("New_cases_(7_day_average)" = mean(newCasesBySpecimenDate)) %>%
+  
+  tibble::as_tibble()
+
+
+lad19_covid19 %>%
+  knitr::kable (digits = 2) 
+
+
+ #ISO week 
+ 
  # Breakdown into week summaries
  # Compare with other areas with similar population sizes
  # Can I introduce new data?
@@ -281,9 +348,11 @@ lad19 <- readr::read_csv("lad19_population.csv")
  # include densities and area?
  # wales lockdown?
  # isoweek?
+ # find a way of filling na values with 0 instead of filtering them out
  
-   
-
+# d illustrate the development of cases over time, compared to the population, or it could
+ # illustrate a comparison with other areas in the region.
+ 
  
  # Include a short text (max 250 words) providing a short description of the analysis and interpretation of the results.
  

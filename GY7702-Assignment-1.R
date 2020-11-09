@@ -1,13 +1,19 @@
 
+# Document was written in RMarkdown with a created PDF as output.
+# A repository connected to this document can be found at https://github.com/RobertSA92/GY7702-Assignment-1.
+
 
 
 # Question 1 --------------------------------------------------------------
 
-# Question 1
 
+# Create a vector of  25 numbers between 1 and 7 using the function c.
 
 survey_answers <- c(NA, 3, 4, 4, 5, 2, 4, NA, 6, 3, 5, 4, 0, 5, 7, 5, NA, 5, 2, 4, NA, 3, 3, 5, NA)
 
+
+
+# These values represent the answers to a survey question, the scale is as follows:
 
 # 1 = completely disagree
 # 2 = disagree
@@ -22,44 +28,48 @@ survey_answers <- c(NA, 3, 4, 4, 5, 2, 4, NA, 6, 3, 5, 4, 0, 5, 7, 5, NA, 5, 2, 
 # Question 1.1 ------------------------------------------------------------
 
 
-# Question 1.1: 
   
 library(tidyverse)
 library(knitr)
 
-# Remove NA values from vector
-cleaned_survey_answers <- survey_answers[!is.na(survey_answers)]
 
-# Check if all survey answers completely disagree
-    all(cleaned_survey_answers == "1")
     
-# Check if all survey answers compleely agree
-    all(cleaned_survey_answers == "7")
-  
+# Remove all NA values from vector
+ cleaned_survey_answers <- survey_answers[!is.na(survey_answers)]
+    
+    # Check if all survey answers completely disagree
+    if(all(cleaned_survey_answers == 1)) {
+      cat("All survey answers completely disagree")
+     
+       
+    # Check if all survey answers compleely agree
+    } else {
+    if(all(cleaned_survey_answers == 7)) {  
+      cat("All survey answers completely agree")
+      
+      
+    # If all answers neither completely disagree or completeyly agree give this output
+    } else {
+      cat("All survey answers neither completely disagree or completely agree")
+  }
+}
     
 
+    
 # Question 1.2 ------------------------------------------------------------
 
-#
-# Question 1.2: 
     
 
-# Coerce? data into logical values, any values 5 or greater are TRUE, any values 4 or lower are FALSE
-logical_survey_answers <- cleaned_survey_answers >= 5
-    
+# Coerce data into logical values, any values that equal 5 or greater are TRUE, any values that equal 4 or lower are FALSE.
+# This uses the original data with the NA values in order to find the original index of each survey answer. 
+
  logical_original_survey_answers <- survey_answers >= 5
-    
 
- cleaned_survey_answers
  
 # Find the indexes that are TRUE 
 
   which(logical_original_survey_answers %in% TRUE)
     
- 
-## possibly use: cleaner_survey_answers <- as.numeric(cleaned_survey_answers)
-  
-  
   
 
 # Question 2  -------------------------------------------------------------
@@ -67,7 +77,7 @@ logical_survey_answers <- cleaned_survey_answers >= 5
 
 # Question 2.1: -----------------------------------------------------------
 
-# Install the library library palmerpenguins
+# Install the library library palmerpenguins.
   
   
   install.packages("palmerpenguins")
@@ -77,20 +87,32 @@ logical_survey_answers <- cleaned_survey_answers >= 5
 
 # Question 2.2: -----------------------------------------------------------
 
-
+# Load the palmerpenguins penguins data into a variable
  penguins <- palmerpenguins::penguins
-  raw_penguins <- palmerpenguins::penguins_raw
-
+  
+# Load data into newpenguins variable.
  newpenguins <- palmerpenguins::penguins %>%
+   
+    # Select data for the species, island, bill length (mm), and body mass (g)
     dplyr::select(species, island, bill_length_mm, body_mass_g) %>%
+   
+   # Filter for penguins that are the Gentoo species.
     dplyr::filter(species == "Gentoo") %>%
+   
+   # Remove observations that have a NA value for bill length.
     dplyr::filter(!is.na(bill_length_mm)) %>%
+   
+   # Arrange data to have the highest body mass (g) at the top.
     dplyr::arrange(desc(body_mass_g)) %>%
+   
+   # Only show the top 10 rows, reflecting the top 10 highest values for body mass (g).
    dplyr::slice_head(n = 10) %>%
+   
+   # Create a well formated table
    knitr::kable() %>%
    print()
 
- 
+  
 # remember to change identifier
 
 #  Question 2.3 -----------------------------------------------------------
@@ -238,7 +260,7 @@ powys_complete_covid_data %>%
   # after 4 days. 
 # An increase can be observed later in March, this time with sustained percentage changes
   # often between 100 - 200%. 
-# The lower figures that interrupt this sustained change tend to be weekend recordings.
+# The lower figures that interrupt this sustained change tend to be Sunday and Monday recordings.
 # The number of new cases continues at a high rate into May, 
 # reaching a percentage change high of 800% on May 10th. 
 # From here, the number of new cases declines. 
@@ -270,27 +292,44 @@ lad19 <- readr::read_csv("lad19_population.csv")
      by = c("lad19_area_name" = "area_name")
    ) 
  
+# Finding Areas with Similar Population to Powys.   #132531. 
+ 
+
+# find
+ 
+ selected_areas <- lad19 %>%
+   select(-lad19_area_code) %>%
+   filter(area_population %in% (131531:133531)) %>%
+   arrange(area_population) %>%
+   rename(area_name = lad19_area_name) %>%
+   tibble::as.tibble()
+   
+   
+ selected_areas %>%
+   knitr::kable(digits = 2)
  
  
  # 7 Day Average Analysis
  
+ 
 wide_covid <- lad19_covid19 %>%
   select(-cumCasesBySpecimenDate, -area_population, -lad19_area_code) %>%
    dplyr::mutate(
-     lad19_area_name = str_replace_all(lad19_area_name, " ", "_")
+     lad19_area_name = str_replace_all(lad19_area_name, " ", "_"),
+     lad19_area_name = str_replace_all(lad19_area_name, "-", "_")
    ) %>%
-  filter(lad19_area_name == "Powys"|lad19_area_name == "Wychavon"| lad19_area_name == "Broadland"| 
-           lad19_area_name == "Exeter" | lad19_area_name == "Epping_Forest") %>%
+  filter(lad19_area_name == "Powys"|lad19_area_name == "Epping_Forest"| lad19_area_name == "Exeter"| 
+           lad19_area_name == "Stratford_on_Avon" | lad19_area_name == "Tonbridge_and_Malling") %>%
   pivot_wider(
   names_from = lad19_area_name,
   values_from = newCasesBySpecimenDate
   ) %>%
    dplyr::filter(
-     !is.na(Broadland),
      !is.na(Powys),
-     !is.na(Wychavon),
+     !is.na(Epping_Forest),
      !is.na(Exeter),
-     !is.na(Epping_Forest)
+     !is.na(Stratford_on_Avon),
+     !is.na(Tonbridge_and_Malling)
      )%>%
    mutate(
      week_commencing = floor_date(specimen_date, unit = "weeks", week_start = getOption("lubridate.week.start", 1))
@@ -299,8 +338,8 @@ wide_covid <- lad19_covid19 %>%
    
    # 7 Day Average of New Cases
    
-   summarise(Powys = mean(Powys), Broadland = mean(Broadland), Wychavon = mean(Wychavon),
-             Exeter = mean(Exeter), Epping_Forest = mean(Epping_Forest)) %>%
+   summarise(Powys = mean(Powys), Epping_Forest = mean(Epping_Forest), Exeter = mean(Exeter),
+             Stratford_on_Avon = mean(Stratford_on_Avon), Tonbridge_and_Malling = mean(Tonbridge_and_Malling)) %>%
   tibble::as.tibble()
  
 
@@ -309,32 +348,37 @@ wide_covid %>%
   knitr::kable(digits = 2)
 
 
+
+# The aim of this analysis is to compare the development of Covid cases in Powys
+# with other areas in the United Kingdom that have a similar population count. 
+# According to Local Authority Data the area of Powys has a population of 132531. 
+# To find other regions with a similar population, the data was filtered for areas 
+# with a population between +1000 and -1000 that of Powys. 
+# The areas found by this process were Epping Forest, Exeter, Stratford-on-Avon, 
+# and Tonbridge and Malling (Table 1.)
+
+# Data recording the daily number of new Covid cases was then analysed for each area.  
+# The results showed a fall in cases on Sunday and Monday,
+# to mitigate this weekend factor, and attain a better understanding of general trends, 
+# a 7-day average of new cases was calculated for each week.
+
+# 5 of the first 6 weeks show the number of new cases in Powys increasing, 
+# reaching a high of 6.71 in mid-April.  
+# The 4 other areas show a similar pattern, reaching their highest number of new cases
+# either in April, or at the very end of March.
+# From here, all areas begin to decline, Powys reaches a low of 0.14 at the start of June 
+# and sustains a value of less than 1 every week until the end of July. 
+# Similarly, all other areas reach low values in July or the latter half of June. 
+# From here, the number of new cases grows in every area until the data ends in October (Table 2).    
+
+
+
 # Table will illustrate a comparison between Powys and 4 other regions that have similar populations.
 # To understand the general trends and mitigate the weekend effect a 7 day average of new cases has been 
 # calculated for each week. Broadland spike. Epping Forest spike.
 # High finish. 
 
-
-
-# Notes
-
-lad19_covid19 <- 
-  dplyr::full_join(
-    lad19,
-    covid_data,
-    by = c("lad19_area_name" = "area_name")
-  ) %>%
-  dplyr::filter(lad19_area_name == "Powys"| lad19_area_name == "Angus")  %>%
-  dplyr::select(specimen_date, -area_population, newCasesBySpecimenDate, -cumCasesBySpecimenDate, 
-                lad19_area_name, -lad19_area_code) %>%
-  group_by(week_number = format(specimen_date, "%W")) %>%
-  summarise("New_cases_(7_day_average)" = mean(newCasesBySpecimenDate)) %>%
-  
-  tibble::as_tibble()
-
-
-lad19_covid19 %>%
-  knitr::kable (digits = 2) 
+# Notes -------------------------------------------------------------------
 
 
  #ISO week 
@@ -349,10 +393,6 @@ lad19_covid19 %>%
  # wales lockdown?
  # isoweek?
  # find a way of filling na values with 0 instead of filtering them out
+
  
-# d illustrate the development of cases over time, compared to the population, or it could
- # illustrate a comparison with other areas in the region.
- 
- 
- # Include a short text (max 250 words) providing a short description of the analysis and interpretation of the results.
  

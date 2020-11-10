@@ -1,16 +1,27 @@
+---
+title: "GY7702-Assignment-1"
+author: "Robert Atkinson"
+date: "10/11/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 # Document was written in RMarkdown with a created PDF as output.
 # A repository connected to this document can be found at https://github.com/RobertSA92/GY7702-Assignment-1.
 
 
 
-# Question 1 --------------------------------------------------------------
+# Question 1:
 
 
 # Create a vector of  25 numbers between 1 and 7 using the function c.
 
+```{r}
 survey_answers <- c(NA, 3, 4, 4, 5, 2, 4, NA, 6, 3, 5, 4, 0, 5, 7, 5, NA, 5, 2, 4, NA, 3, 3, 5, NA)
-
+```
 
 
 # These values represent the answers to a survey question, the scale is as follows:
@@ -25,15 +36,16 @@ survey_answers <- c(NA, 3, 4, 4, 5, 2, 4, NA, 6, 3, 5, 4, 0, 5, 7, 5, NA, 5, 2, 
 # NA = missing value
 
 
-# Question 1.1 ------------------------------------------------------------
+# Question 1.1:
 
 
-  
+```{r}  
 library(tidyverse)
 library(knitr)
+```
 
 
-    
+```{r}    
 # Remove all NA values from vector
  cleaned_survey_answers <- survey_answers[!is.na(survey_answers)]
     
@@ -51,15 +63,15 @@ library(knitr)
     # If all answers neither completely disagree or completeyly agree give this output
     } else {
       cat("All survey answers neither completely disagree or completely agree")
-  }
-}
-    
+    }
+      }
+```    
 
     
-# Question 1.2 ------------------------------------------------------------
+# Question 1.2:
 
     
-
+```{r}
 # Coerce data into logical values, any values that equal 5 or greater are TRUE, any values that equal 4 or lower are FALSE.
 # This uses the original data with the NA values in order to find the original index of each survey answer. 
 
@@ -69,24 +81,27 @@ library(knitr)
 # Find the indexes that are TRUE 
 
   which(logical_original_survey_answers %in% TRUE)
-    
+```    
   
 
-# Question 2  -------------------------------------------------------------
+# Question 2:
 
+# Question 2.1: 
 
-# Question 2.1: -----------------------------------------------------------
-
+```{r}
 # Install the library library palmerpenguins.
   
   
   install.packages("palmerpenguins")
   library(palmerpenguins)
   
-  
+```  
 
-# Question 2.2: -----------------------------------------------------------
 
+
+# Question 2.2: 
+
+```{r}
   #Create identifier to store table and load penguins date from palmerpenguins. 
    high_body_mass_gentoo <- palmerpenguins::penguins %>%
    
@@ -105,16 +120,16 @@ library(knitr)
    # Only show the top 10 rows, reflecting the top 10 highest values for body mass (g).
    dplyr::slice_head(n = 10) %>%
    
-  # Create tibble from data.
-  tibble::as.tibble(high_body_mass_gentoo) 
-  
-  # Show a well-formated table.
-   high_body_mass_gentoo %>%
+   # Show a well-formated table.
    knitr::kable() %>%
    print()
+```
 
 
-#  Question 2.3 -----------------------------------------------------------
+
+#  Question 2.3:
+
+```{r}
 
  # Create identifier to store table and load penguins date from palmerpenguins. 
  average_bill_penguins <- palmerpenguins::penguins %>%
@@ -135,19 +150,18 @@ library(knitr)
    dplyr::summarise(
      mean(bill_length_mm)
    ) %>%
-  
-  # Create tibble from data 
-    tibble::as_tibble()
    
   # Show a well-formated table. 
-  average_bill_penguins %>% 
-  knitr::kable() %>%
-  print()
+   knitr::kable() %>%
+   print()
 
+```
  
   
-# Question 2.4 ------------------------------------
+# Question 2.4:
  
+ 
+```{r} 
 # Create identifier to store table and load penguins date from palmerpenguins. 
  min_med_max_bill_proportion_penguins <- palmerpenguins::penguins %>%
     
@@ -177,32 +191,29 @@ library(knitr)
     # Summarise the maximum proportion. 
      max_proportion = round(max(proportion_between_bl_and_bd), 2)
      
-         ) %>% 
-
-    # Create tibble from data
-    tibble::as.tibble()
-  
-  
+     ) %>% 
+   
     # Show a well-formatted table. 
-    min_med_max_bill_proportion_penguins %>%
-    knitr::kable() %>%
-    print()
+   knitr::kable() %>%
+   print()
+``` 
  
- 
 
-# Question 3 --------------------------------------------------------------
+# Question 3:
 
 
-# Question 3.1: -----------------------------------------------------------
+# Question 3.1: 
 
+
+```{r}
 #  load the data from covid19_cases_20200301_20201017.csv to a variable named covid_data.
  covid_data <- readr::read_csv("covid19_cases_20200301_20201017.csv")
-
+```
  
-  
-# Question 3.2 ------------------------------------------------------------
+ 
+# Question 3.2:
 
-
+```{r}
 # Store resulting table in variable. 
 powys_complete_covid_data <- covid_data %>%
     
@@ -225,14 +236,13 @@ powys_complete_covid_data <- covid_data %>%
   # Show a well-formatted table. Limit to only show the first 5 rows. 
 powys_complete_covid_data %>%
   dplyr::slice_head(n = 5) %>%
-   knitr::kable() %>%
-   print()
-  
+   knitr::kable()
+```  
 
 
-# # Question 3.3 ----------------------------------------------------------
+# Question 3.3:
 
- 
+```{r} 
 # Create a copy of "powys_complete_covid_data".
 
 powys_day_before <- powys_complete_covid_data
@@ -309,10 +319,11 @@ powys_day_before <- powys_complete_covid_data
    
   # Show only the first 2 decimal places. 
    knitr::kable(digits = 2)
-  
+```  
 
    
-# Question 3.4  -----------------------------------------------------------
+# Question 3.4:
+
 
 # A short rext describing the  development of new cases in the Powys, as evidenced by the table "powys_covid_development". 
  
@@ -329,8 +340,11 @@ powys_day_before <- powys_complete_covid_data
 
  
 
-#  Question 4 -------------------------------------------------------------
+#  Question 4:
 
+
+# Table 1
+```{r}
 # Load population data into the variable "lad19".
  
 lad19 <- readr::read_csv("lad19_population.csv") 
@@ -382,9 +396,11 @@ lad19_covid19 <-
    knitr::kable()
  
  
+```
+ 
+# Table 2
 
- 
- 
+```{r}
 # Finding the 7 day average of "Powys", "Epping Forest", "Exeter", "Straford-on-Avon", and "Tonbridge and Malling". Create Table 2.  
  
 # Assign table to the variable "seven_day_average_5_areas". 
@@ -460,7 +476,9 @@ seven_day_average_5_areas %>%
   # Show only the first 2 decimal places. 
   
   knitr::kable(digits = 2)
+```
 
+# Analysis and Interpretation 
 
 # The aim of this analysis was to compare the development of Covid-19 cases in Powys
 # with other areas in the United Kingdom that have a similar population count. 

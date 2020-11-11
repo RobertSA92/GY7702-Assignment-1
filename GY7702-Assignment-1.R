@@ -88,7 +88,7 @@ library(knitr)
 # Question 2.2: -----------------------------------------------------------
 
   #Create identifier to store table and load penguins date from palmerpenguins. 
-   high_body_mass_gentoo <- palmerpenguins::penguins %>%
+  high_body_mass_gentoo <- palmerpenguins::penguins %>%
    
     # Select data for the species, island, bill length (mm), and body mass (g)
     dplyr::select(species, island, bill_length_mm, body_mass_g) %>%
@@ -102,14 +102,16 @@ library(knitr)
    # Arrange data to have the highest body mass (g) at the top.
     dplyr::arrange(desc(body_mass_g)) %>%
    
-   # Only show the top 10 rows, reflecting the top 10 highest values for body mass (g).
-   dplyr::slice_head(n = 10) %>%
-   
   # Create tibble from data.
-  tibble::as.tibble(high_body_mass_gentoo) 
+  tibble::as_tibble() 
+  
+  
   
   # Show a well-formated table.
    high_body_mass_gentoo %>%
+     
+  # Only show the top 10 rows, reflecting the top 10 highest values for body mass (g).
+   dplyr::slice_head(n = 5) %>%
    knitr::kable() %>%
    print()
 
@@ -180,7 +182,7 @@ library(knitr)
          ) %>% 
 
     # Create tibble from data
-    tibble::as.tibble()
+    tibble::as_tibble()
   
   
     # Show a well-formatted table. 
@@ -219,7 +221,7 @@ powys_complete_covid_data <- covid_data %>%
    dplyr::select(-area_name) %>%
     
     # Create tibble from data
-   tibble::as.tibble() 
+   tibble::as_tibble() 
 
   
   # Show a well-formatted table. Limit to only show the first 5 rows. 
@@ -256,7 +258,7 @@ powys_day_before <- powys_complete_covid_data
    dplyr::rename("newCases_day_before" = "newCasesBySpecimenDate") %>%
    
    # Create tibble from data
-   tibble::as.tibble()
+   tibble::as_tibble()
  
  
  # Join "powys_day_before" with "powys_complete_covid_data". Match the "specimen_date" and "day_before" columns.
@@ -296,7 +298,7 @@ powys_day_before <- powys_complete_covid_data
      ) %>%
    
    # Create tibble from data.
-   tibble::as.tibble()
+   tibble::as_tibble()
 
  
  # Show a well-formatted table. 
@@ -375,7 +377,7 @@ lad19_covid19 <-
    rename(area_name = lad19_area_name) %>%
    
    # Create a tibble from this data
-   tibble::as.tibble()
+   tibble::as_tibble()
    
    # Show a well-formated table 
  selected_areas %>%
@@ -445,7 +447,7 @@ seven_day_average_5_areas <- lad19_covid19 %>%
     Tonbridge_and_Malling = replace_na(Tonbridge_and_Malling, 0)) %>%
                 
  # Create tibble from data. 
-  tibble::as.tibble()
+  tibble::as_tibble()
  
 
 
@@ -462,7 +464,7 @@ seven_day_average_5_areas %>%
   knitr::kable(digits = 2)
 
 
-# The aim of this analysis was to compare the development of Covid-19 cases in Powys
+# The aim of this analysis was to use official government data to compare the development of Covid-19 cases in Powys
 # with other areas in the United Kingdom that have a similar population count. 
 # According to Local Authority Data the area of Powys has a population of 132531. 
 # To find other regions with a similar population, the data was filtered for areas 

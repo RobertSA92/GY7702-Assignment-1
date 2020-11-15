@@ -1,5 +1,5 @@
 
-# Document was written in RMarkdown with a created PDF as output.
+# Document was written in RMarkdown with a PDF created as output.
 # A repository connected to this document can be found at https://github.com/RobertSA92/GY7702-Assignment-1.
 
 
@@ -87,25 +87,23 @@ library(knitr)
 
 # Question 2.2: -----------------------------------------------------------
 
-  #Create identifier to store table and load penguins date from palmerpenguins. 
+# Create identifier to store table and load penguins date from palmerpenguins. 
   high_body_mass_gentoo <- palmerpenguins::penguins %>%
    
     # Select data for the species, island, bill length (mm), and body mass (g)
     dplyr::select(species, island, bill_length_mm, body_mass_g) %>%
-   
-   # Filter for penguins that are the Gentoo species.
+    
+    # Filter for penguins that are the Gentoo species.
     dplyr::filter(species == "Gentoo") %>%
-   
-   # Remove observations that have a NA value for bill length.
+    
+    # Remove observations that have a NA value for bill length.
     dplyr::filter(!is.na(bill_length_mm)) %>%
-   
-   # Arrange data to have the highest body mass (g) at the top.
+    
+    # Arrange data to have the highest body mass (g) at the top.
     dplyr::arrange(desc(body_mass_g)) %>%
-   
-  # Create tibble from data.
-  tibble::as_tibble() 
-  
-  
+    
+    # Create tibble from data.
+    tibble::as_tibble() 
   
   # Show a well-formated table.
    high_body_mass_gentoo %>%
@@ -168,7 +166,7 @@ library(knitr)
    ) %>%
     
   # Summarise proportion by species.  
-  summarise(
+  dplyr::summarise(
     
     # Summarise the mininum proportion.
      min_proportion = round(min(proportion_between_bl_and_bd), 2),
@@ -292,7 +290,6 @@ powys_day_before <- powys_complete_covid_data
    
    # Calculate a new column in the joined table. 
    # This joined table will contain the number of new cases as a percentage of the number of new cases of the day before.
-   
    dplyr::mutate(
      percentage = (newCasesBySpecimenDate/ newCases_day_before)*100
      ) %>%
@@ -302,11 +299,9 @@ powys_day_before <- powys_complete_covid_data
 
  
  # Show a well-formatted table. 
- 
  powys_covid_development %>%
    
   # Limit to only show the first 5 rows.
-   
    dplyr::slice_head(n = 5) %>%
    
   # Show only the first 2 decimal places. 

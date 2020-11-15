@@ -1,5 +1,5 @@
 ---
-title: "GY7702-Assignment-1"
+title: "209045062_GY7702_CW1_Programming_Exercise"
 author: "Robert Atkinson"
 date: "10/11/2020"
 output: pdf_document
@@ -25,7 +25,6 @@ The repository used to make this document can be found at  [https://github.com/R
 
 ```{r Question 1}
 # Create a vector of  25 numbers between 1 and 7 using the function c.
-
 survey_answers <- c(NA, 3, 4, 4, 5, 2, 4, NA, 6, 3, 5, 4, 0, 5,
                     7, 5, NA, 5, 2, 4, NA, 3, 3, 5, NA)
 
@@ -47,28 +46,28 @@ survey_answers <- c(NA, 3, 4, 4, 5, 2, 4, NA, 6, 3, 5, 4, 0, 5,
 ## Question 1.1:
 
 
-```{r Question 1.1}
+```{r Question 1.1, message=FALSE}
 
 library(tidyverse)
 library(knitr)
 
 
     
-# Remove all NA values from vector
+# Remove all NA values from vector.
  cleaned_survey_answers <- survey_answers[!is.na(survey_answers)]
     
-    # Check if all survey answers completely disagree
+    # Check if all survey answers completely disagree.
     if(all(cleaned_survey_answers == 1)) {
       cat("All survey answers completely disagree")
      
        
-    # Check if all survey answers compleely agree
+    # Check if all survey answers compleely agree.
     } else {
     if(all(cleaned_survey_answers == 7)) {  
       cat("All survey answers completely agree")
       
       
-    # If all answers neither completely disagree or completeyly agree give this output
+    # If all answers neither completely disagree or completeyly agree give this output.
     } else {
       cat("All survey answers neither completely disagree or completely agree")
   }
@@ -85,15 +84,11 @@ library(knitr)
 # any values that equal 4 or lower are FALSE.
 # This uses the original data with the NA values in order to find the original index
 # of each survey answer. 
-
  logical_original_survey_answers <- survey_answers >= 5
 
  
-# Find the indexes that are TRUE 
-
+# Find the indexes that are TRUE.
   which(logical_original_survey_answers %in% TRUE)
-    
-  
 ```
 
 
@@ -105,10 +100,9 @@ library(knitr)
 ## Question 2.1:
 
 
-```{r Question 2.1}
+```{r Question 2.1, message=FALSE}
 
 # Install the library library palmerpenguins.
-  
   install.packages("palmerpenguins", repos = "https://cran.r-project.org/")
   library(palmerpenguins)
   
@@ -123,7 +117,7 @@ library(knitr)
 # Create identifier to store table and load penguins date from palmerpenguins. 
   high_body_mass_gentoo <- palmerpenguins::penguins %>%
   
-  # Select data for the species, island, bill length (mm), and body mass (g)
+  # Select data for the species, island, bill length (mm), and body mass (g).
     dplyr::select(species, island, bill_length_mm, body_mass_g) %>%
   
   # Filter for penguins that are the Gentoo species.
@@ -137,7 +131,6 @@ library(knitr)
 
   # Create tibble from data.
   tibble::as_tibble() 
-  
   
   
   # Show a well-formated table.
@@ -176,7 +169,7 @@ library(knitr)
      mean(bill_length_mm)
    ) %>%
   
-  # Create tibble from data 
+  # Create tibble from data.
     tibble::as_tibble()
    
   # Show a well-formated table. 
@@ -195,24 +188,24 @@ library(knitr)
 # Create identifier to store table and load penguins date from palmerpenguins. 
  min_med_max_bill_proportion_penguins <- palmerpenguins::penguins %>%
     
-  # Select data for species, island, bill length (mm), and bill depth (mm).  
-   dplyr::select(species, island, bill_length_mm, bill_depth_mm) %>%
+  # Select data for species, island, bill length (mm), and bill depth (mm).
+  dplyr::select(species, island, bill_length_mm, bill_depth_mm) %>%
     
-  # Remove observations that have a NA value for bill length.  
-   dplyr::filter(!is.na(bill_length_mm)) %>%
+  # Remove observations that have a NA value for bill length.
+  dplyr::filter(!is.na(bill_length_mm)) %>%
     
   # Group by species
    dplyr::group_by(species) %>%
     
   # Create new variable containing the propotions between bill length
   # and bil depth for each penguin.
-   dplyr::mutate(
+  dplyr::mutate(
      proportion_between_bl_and_bd = (((bill_length_mm - bill_depth_mm)
                                       /bill_length_mm)*100)
    ) %>%
     
   # Summarise proportion by species.  
-  summarise(
+  dplyr::summarise(
     
     # Summarise the mininum proportion.
      min_proportion = round(min(proportion_between_bl_and_bd), 2),
@@ -225,7 +218,7 @@ library(knitr)
      
          ) %>% 
 
-    # Create tibble from data
+    # Create tibble from data.
     tibble::as_tibble()
   
   
@@ -236,6 +229,12 @@ library(knitr)
 
 ``` 
  
+ 
+
+
+
+
+
 
 # Question 3
 
@@ -243,7 +242,7 @@ library(knitr)
 ## Question 3.1:
 
 
-```{r Question 3.1}
+```{r Question 3.1, message=FALSE}
 
 #  Load the data from covid19_cases_20200301_20201017.csv to a variable named covid_data.
  covid_data <- readr::read_csv("covid19_cases_20200301_20201017.csv")
@@ -275,13 +274,19 @@ powys_complete_covid_data <- covid_data %>%
   # Create tibble from data
   tibble::as_tibble() 
 
-  
+
+
+
+
+
+
 # Show a well-formatted table. Limit to only show the first 5 rows. 
 powys_complete_covid_data %>%
   dplyr::slice_head(n = 5) %>%
   knitr::kable() %>%
   print()
 ```  
+
 
 
 ## Question 3.3:
@@ -299,7 +304,7 @@ powys_day_before <- powys_complete_covid_data
  powys_day_before <- powys_day_before %>%
    
    # Create new column named "day_before" that reports the day before the day reported
-   # in the column specimen_date
+   # in the column specimen_date.
    dplyr::mutate(day_before = ymd(specimen_date) - 1) %>%
    
    # Coerce "day_before" data to a character value.
@@ -311,7 +316,7 @@ powys_day_before <- powys_complete_covid_data
    # Rename the "newCasesBySpecimenDate" column to "newCases_day_before.
    dplyr::rename("newCases_day_before" = "newCasesBySpecimenDate") %>%
    
-   # Create tibble from data
+   # Create tibble from data.
    tibble::as_tibble()
  
  
@@ -351,7 +356,6 @@ powys_day_before <- powys_complete_covid_data
    
    # This joined table will contain the number of new cases as a percentage of 
    # the number of new cases of the day before.
-   
    dplyr::mutate(
      percentage = (newCasesBySpecimenDate/ newCases_day_before)*100
      ) %>%
@@ -361,11 +365,9 @@ powys_day_before <- powys_complete_covid_data
 
  
  # Show a well-formatted table. 
- 
  powys_covid_development %>%
    
   # Limit to only show the first 5 rows.
-   
    dplyr::slice_head(n = 5) %>%
    
   # Show only the first 2 decimal places. 
@@ -393,7 +395,6 @@ The number of new cases starts to rise in the second week of March but quickly l
 ```{r Question 4 Table 1, message=FALSE}
 
 # Load population data into the variable "lad19".
- 
 lad19 <- readr::read_csv("lad19_population.csv") 
  
 
@@ -409,13 +410,13 @@ lad19_covid19 <-
   dplyr::inner_join(
   
   # Left table.  
-       lad19,
+    lad19,
        
   # Right table.
-     covid_data,
+  covid_data,
   
   # Columns to match. 
-     by = c("lad19_area_name" = "area_name")
+  by = c("lad19_area_name" = "area_name")
    ) 
  
 
@@ -437,15 +438,18 @@ lad19_covid19 <-
    # Rename "lad19_area_name" to "area_name".
    rename(area_name = lad19_area_name) %>%
    
-   # Create a tibble from this data
+   # Create a tibble from this data.
    tibble::as_tibble()
    
-   # Show a well-formated table 
+   # Show a well-formated table.
  selected_areas %>%
    knitr::kable()
  
 ``` 
  
+
+
+
 
 ## Table 2.
 
@@ -459,7 +463,7 @@ lad19_covid19 <-
 seven_day_average_5_areas <- lad19_covid19 %>%
   
   # Drop the columns "cumCasesBySpecimenDate", "area_population", and "lad19_area_code".
-  select(-cumCasesBySpecimenDate, -area_population, -lad19_area_code) %>%
+  dplyr::select(-cumCasesBySpecimenDate, -area_population, -lad19_area_code) %>%
   
   # Change spaces and hyphens to underscores in order to work in R.
    dplyr::mutate(
@@ -469,15 +473,14 @@ seven_day_average_5_areas <- lad19_covid19 %>%
   
   # Filter for the areas "Powys", "Epping Forest", "Exeter", "Stratford-on-Avon", 
   # and "Tonbridge and Malling".
-
-  filter(lad19_area_name == "Powys"|
+  dplyr::filter(lad19_area_name == "Powys"|
            lad19_area_name == "Epping_Forest"|
            lad19_area_name == "Exeter"| 
            lad19_area_name == "Stratford_on_Avon" | 
            lad19_area_name == "Tonbridge_and_Malling") %>%
   
   # Pivot table to wide format.
-  pivot_wider(
+  tidyr::pivot_wider(
     
    # Retrieve colum names from "lad19_area_name". 
   names_from = lad19_area_name,
@@ -488,23 +491,22 @@ seven_day_average_5_areas <- lad19_covid19 %>%
 
   # Find the start date for each week. Class the start date as Monday.  
   # Use this to create new column called "week_commencing".
-  mutate(
+  dplyr::mutate(
     week_commencing = floor_date(specimen_date, unit = "weeks", 
                                  week_start = getOption("lubridate.week.start", 1))
   ) %>%
   
   # Group data by each "week_commencing" date, condesing the rows to weeks. 
-  group_by(week_commencing) %>%
+  dplyr::group_by(week_commencing) %>%
   
   # Find the 7-day average of new cases for each selected area. 
-  summarise(Powys = mean(Powys),
+  dplyr::summarise(Powys = mean(Powys),
             Epping_Forest = mean(Epping_Forest), 
             Exeter = mean(Exeter),
             Stratford_on_Avon = mean(Stratford_on_Avon), 
             Tonbridge_and_Malling = mean(Tonbridge_and_Malling)) %>%
  
  # Check if there are any NA values, if so, replace with previous date value.
-  
   tidyr::fill(Powys, .direction = "down") %>%
   tidyr::fill(Epping_Forest, .direction = "down") %>%
   tidyr::fill(Exeter, .direction = "down") %>% 
@@ -526,15 +528,12 @@ seven_day_average_5_areas <- lad19_covid19 %>%
 
 
 # Show data in a well-formatted table. 
-
 seven_day_average_5_areas %>%
   
   # Limit to only show the first 5 rows.
-  
   dplyr::slice_head(n = 5) %>%
   
   # Show only the first 2 decimal places. 
-  
   knitr::kable(digits = 2)
 
 ```
